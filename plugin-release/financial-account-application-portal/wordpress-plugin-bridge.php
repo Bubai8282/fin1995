@@ -732,11 +732,11 @@ function faap_admin_manage_forms() {
 
     // Ensure valid JSON for the editor defaults.
     $personalData = json_decode($personal, true);
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($personalData)) {
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($personalData) || count($personalData) === 0) {
         $personalData = faap_get_default_form_steps();
     }
     $businessData = json_decode($business, true);
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($businessData)) {
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($businessData) || count($businessData) === 0) {
         $businessData = faap_get_default_form_steps();
     }
 
