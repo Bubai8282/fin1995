@@ -77,14 +77,17 @@ export function StepRenderer() {
   }
 
   // Step 1: Account Selection
+  const currentStepData = steps.find((step: any) => Number(step.order || step.id) === currentStep) || steps[currentStep - 1] || null;
+  const activeStepData = currentStepData;
+
   if (currentStep === 1) {
-    const isPersonal = data.type === 'personal';
-    const appId = data.applicationId;
+    const heading = currentStepData?.title || 'Account Type Selection';
+    const description = currentStepData?.description || 'Choose the type of account you wish to open';
     return (
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="space-y-1">
-          <h2 className="text-2xl font-bold font-headline text-[#0a192f]">Account Type Selection</h2>
-          <p className="text-slate-400 text-[13px] font-normal">Choose the type of account you wish to open</p>
+          <h2 className="text-2xl font-bold font-headline text-[#0a192f]">{heading}</h2>
+          <p className="text-slate-400 text-[13px] font-normal">{description}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -115,8 +118,6 @@ export function StepRenderer() {
     const isPersonal = data.type === 'personal';
     const appId = data.applicationId;
 
-    const currentStepData = steps.find((step: any) => step.order === currentStep);
-
     return (
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500 font-body">
         <div className="space-y-2">
@@ -124,9 +125,9 @@ export function StepRenderer() {
           <p className="text-slate-500 text-[12px] italic">Upload required documents</p>
         </div>
 
-        {currentStepData?.description && (
+        {activeStepData?.description && (
           <div className="bg-white border border-slate-200 rounded-lg p-6 text-[11px] leading-relaxed text-slate-600">
-            <div className="whitespace-pre-line">{currentStepData.description}</div>
+            <div className="whitespace-pre-line">{activeStepData.description}</div>
           </div>
         )}
 
@@ -373,8 +374,7 @@ export function StepRenderer() {
     );
   }
 
-  const currentStepData = steps.find((step: any) => step.order === currentStep);
-  if (!currentStepData) {
+  if (!activeStepData) {
     return <div>Step not found</div>;
   }
 
@@ -382,11 +382,11 @@ export function StepRenderer() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-1">
-        <h2 className="text-2xl font-bold font-headline text-[#0a192f]">{currentStepData.title}</h2>
-        <p className="text-slate-400 text-[13px] font-normal">{currentStepData.description}</p>
+        <h2 className="text-2xl font-bold font-headline text-[#0a192f]">{activeStepData.title}</h2>
+        <p className="text-slate-400 text-[13px] font-normal">{activeStepData.description}</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentStepData.fields.map((field) => (
+        {activeStepData.fields.map((field) => (
           <div key={field.id} className={cn("space-y-2", field.width === 'half' ? '' : 'md:col-span-2')}>
             <Label htmlFor={field.name} className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
               {field.label}

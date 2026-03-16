@@ -97,7 +97,7 @@ export function FormProvider({ children }: { children: ReactNode }) {
     fetchSteps();
   }, [data.type]);
 
-  const totalSteps = 9;
+  const totalSteps = steps?.length || 9;
 
   const updateData = (newData: Partial<ApplicationData>) => {
     setData((prev) => ({

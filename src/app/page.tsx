@@ -15,23 +15,26 @@ import Image from "next/image";
 
 function ApplicationLayout() {
   const { toast } = useToast();
-  const { currentStep, totalSteps, nextStep, prevStep, data, setType } = useForm();
+  const { currentStep, totalSteps, nextStep, prevStep, data, setType, steps } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
-  
-  const steps = [
-    { id: 1, label: "TYPE" },
-    { id: 2, label: "IDENTITY" },
-    { id: 3, label: "CONTACT" },
-    { id: 4, label: "ACTIVITY" },
-    { id: 5, label: "WEALTH" },
-    { id: 6, label: "BANKING" },
-    { id: 7, label: "FEE BANK" },
-    { id: 8, label: "PAYMENT" },
-    { id: 9, label: "REVIEW" },
-  ];
 
-  const progressPercentage = Math.round((currentStep / totalSteps) * 100);
+  const formSteps = Array.isArray(steps) && steps.length > 0
+    ? steps.slice().sort((a, b) => Number(a.order || 0) - Number(b.order || 0)).map((step, index) => ({ id: index + 1, label: String(step.title || step.id || `Step ${index + 1}`) }))
+    : [
+      { id: 1, label: "TYPE" },
+      { id: 2, label: "IDENTITY" },
+      { id: 3, label: "CONTACT" },
+      { id: 4, label: "ACTIVITY" },
+      { id: 5, label: "WEALTH" },
+      { id: 6, label: "BANKING" },
+      { id: 7, label: "FEE BANK" },
+      { id: 8, label: "PAYMENT" },
+      { id: 9, label: "REVIEW" },
+    ];
+
+  const stepsTotal = formSteps.length;
+  const progressPercentage = Math.round((currentStep / stepsTotal) * 100);
 
   const handleSubmit = async () => {
     if (currentStep < totalSteps) {
@@ -241,7 +244,7 @@ function ApplicationLayout() {
           <div className="mb-12 relative px-4">
             <div className="absolute top-[15px] left-0 right-0 h-[1.5px] bg-slate-200 z-0 mx-12"></div>
             <div className="flex justify-between items-start relative z-10">
-              {steps.map((step) => (
+              {formSteps.map((step) => (
                 <div key={step.id} className="flex flex-col items-center gap-3">
                   <div className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold transition-all shadow-sm",
